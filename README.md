@@ -35,3 +35,10 @@ The current project is an improvement of an earlier project which has been optim
 achieving simulation rates of up to 40kHz!
 
 In order to support simulation of "asynchronous" signals, the current rate of the simulation clock is reduced to approx. 10kHz.
+
+## Dependencies
+To install dependencies type:
+pip install pygubu
+pip install pygubu-designer
+pip install pywin32
+...
