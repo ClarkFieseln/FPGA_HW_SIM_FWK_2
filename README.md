@@ -30,6 +30,8 @@ This tool provides the following features, usually not supported by standard sim
   
 The stimulus and results exchanged between the Simulation App written in Python and the
 VHDL Simulation Tool of the FPGA provider (any tool!) are fast enough to produce a realistic HW behavior in real time.
+
 The current project is an improvement of an earlier project which has been optimized for performance,
 achieving simulation rates of up to 40kHz!
+
 In order to support simulation of "asynchronous" signals, the current rate of the simulation clock is reduced to approx. 10kHz.
