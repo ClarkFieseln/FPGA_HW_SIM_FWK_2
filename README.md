@@ -38,7 +38,14 @@ In order to support simulation of "asynchronous" signals, the current rate of th
 
 ## Dependencies
 To install dependencies type:
-pip install pygubu
-pip install pygubu-designer
-pip install pywin32
-...
+
+  > pip install pygubu
+  
+  > pip install pywin32
+  
+  > ...
+  
+To install designer tool type:
+
+  > pip install pygubu-designer
+  
