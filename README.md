@@ -2,6 +2,7 @@
 FPGA Hardware Simulation Framework 2.0
 
 ["Old" article in Code Project](https://www.codeproject.com/Articles/5329919/FPGA-Hardware-Simulation-Framework-FPGA-HW-SIM-FWK "FPGA_HW_SIM_FWK Article in Code Project")
+
 ["Old" article in GitHub](https://github.com/ClarkFieseln/FPGA_HW_SIM_FWK)
 
 ## Simulate hardware containing an FPGA programmed in VHDL interactively!
@@ -26,6 +27,7 @@ This tool provides the following features, usually not supported by standard sim
   - concurrent input / output (up to 40kHz!)
   - interactive experience with emulated HW
   - communication interface between App and VHDL-Simulator based on named pipes (FIFOs)
+  
 The stimulus and results exchanged between the Simulation App written in Python and the
 VHDL Simulation Tool of the FPGA provider (any tool!) are fast enough to produce a realistic HW behavior in real time.
 The current project is an improvement of an earlier project which has been optimized for performance,
