@@ -3,7 +3,7 @@ FPGA Hardware Simulation Framework 2.0
 
 ["Old" article in Code Project](https://www.codeproject.com/Articles/5329919/FPGA-Hardware-Simulation-Framework-FPGA-HW-SIM-FWK "FPGA_HW_SIM_FWK Article in Code Project")
 
-["Old" article in GitHub](https://github.com/ClarkFieseln/FPGA_HW_SIM_FWK)
+["Old" project in GitHub](https://github.com/ClarkFieseln/FPGA_HW_SIM_FWK)
 
 ## Simulate hardware containing an FPGA programmed in VHDL interactively!
 
