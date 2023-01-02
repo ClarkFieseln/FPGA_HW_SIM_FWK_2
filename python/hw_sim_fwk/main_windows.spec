@@ -1,0 +1,52 @@
+# -*- mode: python ; coding: utf-8 -*-
+
+block_cipher = None
+
+a = Analysis(['main.py'],
+             pathex=['dist'],
+             binaries=[],
+             datas=[
+                    ('ui/mainwindow.ui', '.'), 
+                    ('ui/board.png', '.'),
+					('ui/btn_down.png', '.'),
+					('ui/btn_up.png', '.'),
+					('ui/jmp_off.png', '.'),
+					('ui/jmp_on.png', '.'),
+					('ui/led_green_off.png', '.'),
+					('ui/led_green_on.png', '.'),
+					('ui/led_red_off.png', '.'),
+					('ui/led_red_on.png', '.'),
+					('ui/pause.png', '.'),			
+                    ('ui/power_off.png', '.'),
+                    ('ui/power_on.png', '.'),
+					('ui/reset.png', '.'),
+					('ui/run.png', '.'),
+					('ui/run_for_time.png', '.'),
+					('ui/step.png', '.'),
+					('ui/sw_left.png', '.'),
+					('ui/sw_right.png', '.')
+                   ],
+             hiddenimports=['py._path.local','py._vendored_packages.iniconfig'],
+             hookspath=[],
+             runtime_hooks=[],
+             excludes=[],
+             win_no_prefer_redirects=False,
+             win_private_assemblies=False,
+             cipher=block_cipher,
+             noarchive=False)
+pyz = PYZ(a.pure, a.zipped_data,
+             cipher=block_cipher)
+exe = EXE(pyz,
+          a.scripts,
+          a.binaries,
+          a.zipfiles,
+          a.datas,
+          [],
+          name='fpga_hw_sim_fwk_2',
+          debug=False,
+          bootloader_ignore_signals=False,
+          strip=False,
+          upx=True,
+          upx_exclude=[],
+          runtime_tmpdir=None,
+          console=False )
