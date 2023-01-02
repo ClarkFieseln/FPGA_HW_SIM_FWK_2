@@ -21,6 +21,19 @@ FPGA Hardware Simulation Framework 2.0
 
 ["Old" demo video](https://www.youtube.com/watch?v=Yqu1DDGK04c "FPGA_HW_SIM_FWK Demo Video")
 
+## Dependencies
+To install dependencies type:
+
+  > pip install pygubu
+  
+  > pip install pywin32
+  
+  > pip install oclock
+  
+To install designer tool type:
+
+  > pip install pygubu-designer
+  
 ## Summary
 This tool provides the following features, usually not supported by standard simulation methods:
   - GUI
@@ -35,17 +48,4 @@ The current project is an improvement of an earlier project which has been optim
 achieving simulation rates of up to 40kHz!
 
 In order to support simulation of "asynchronous" signals, the current rate of the simulation clock is reduced to approx. 10kHz.
-
-## Dependencies
-To install dependencies type:
-
-  > pip install pygubu
-  
-  > pip install pywin32
-  
-  > ...
-  
-To install designer tool type:
-
-  > pip install pygubu-designer
   
