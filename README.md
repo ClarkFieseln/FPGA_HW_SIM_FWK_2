@@ -1,4 +1,4 @@
-# FPGA_HW_SIM_FWK_2 (includes .exe file!)
+# FPGA_HW_SIM_FWK_2  (includes generation of .exe file!)
 FPGA Hardware Simulation Framework 2.0
 
 ["Old" article in Code Project](https://www.codeproject.com/Articles/5329919/FPGA-Hardware-Simulation-Framework-FPGA-HW-SIM-FWK "FPGA_HW_SIM_FWK Article in Code Project")
@@ -34,6 +34,8 @@ To install the designer tool type:
 To generate and run an executable file go to python\hw_sim_fwk_2 type:
 
   > gen_and_run_exe.bat
+
+This only takes a few seconds to complete.
 
 ## Summary
 This tool provides the following features, usually not supported by standard simulation methods:
