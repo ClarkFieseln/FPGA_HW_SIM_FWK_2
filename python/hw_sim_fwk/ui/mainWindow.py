@@ -16,9 +16,22 @@ from digital_inputs import DigitalInputs
 from digital_outputs import DigitalOutputs
 from leds import Leds
 import time
+import os
+
 
 CURRENT_PATH = pathlib.Path(__file__).parent
-CURRENT_UI = CURRENT_PATH / "mainWindow.ui"
+# script or .exe?
+runningScript = os.path.basename(__file__)
+# we get different relative paths if we debug or run the executable file
+if(runningScript=="mainWindow.py"):
+    # .py script
+    CURRENT_PATH = str(CURRENT_PATH.resolve()) + "\\"
+else:
+    # .exe file
+    CURRENT_PATH = str(CURRENT_PATH.resolve())[:-2]
+CURRENT_UI = CURRENT_PATH + "mainWindow.ui"
+
+
 SIM_STATE_PAUSE = 0
 SIM_STATE_RUN = 1
 SIM_STATE_RUN_FOR_TIME = 2
@@ -116,22 +129,22 @@ class MainWindow:
         # other stuff
         #############
         # get images
-        self.img_power_on = PhotoImage(file=CURRENT_PATH / "power_on.png")
-        self.img_power_off = PhotoImage(file=CURRENT_PATH / "power_off.png")
-        self.img_jmp_on = PhotoImage(file=CURRENT_PATH / "jmp_on.png")
-        self.img_jmp_off = PhotoImage(file=CURRENT_PATH / "jmp_off.png")
-        self.img_btn_up = PhotoImage(file=CURRENT_PATH / "btn_up.png")
-        self.img_btn_down = PhotoImage(file=CURRENT_PATH / "btn_down.png")
-        self.img_sw_left = PhotoImage(file=CURRENT_PATH / "sw_left.png")
-        self.img_sw_right = PhotoImage(file=CURRENT_PATH / "sw_right.png")
-        self.img_led_red_on = PhotoImage(file=CURRENT_PATH / "led_red_on.png")
-        self.img_led_red_off = PhotoImage(file=CURRENT_PATH / "led_red_off.png")
-        self.img_led_green_on = PhotoImage(file=CURRENT_PATH / "led_green_on.png")
-        self.img_led_green_off = PhotoImage(file=CURRENT_PATH / "led_green_off.png")
-        self.img_run = PhotoImage(file=CURRENT_PATH / "run.png")
-        self.img_pause = PhotoImage(file=CURRENT_PATH / "pause.png")
-        self.img_step = PhotoImage(file=CURRENT_PATH / "step.png")
-        self.img_run_for_time = PhotoImage(file=CURRENT_PATH / "run_for_time.png")
+        self.img_power_on = PhotoImage(file=CURRENT_PATH + "power_on.png")
+        self.img_power_off = PhotoImage(file=CURRENT_PATH + "power_off.png")
+        self.img_jmp_on = PhotoImage(file=CURRENT_PATH + "jmp_on.png")
+        self.img_jmp_off = PhotoImage(file=CURRENT_PATH + "jmp_off.png")
+        self.img_btn_up = PhotoImage(file=CURRENT_PATH + "btn_up.png")
+        self.img_btn_down = PhotoImage(file=CURRENT_PATH + "btn_down.png")
+        self.img_sw_left = PhotoImage(file=CURRENT_PATH + "sw_left.png")
+        self.img_sw_right = PhotoImage(file=CURRENT_PATH + "sw_right.png")
+        self.img_led_red_on = PhotoImage(file=CURRENT_PATH + "led_red_on.png")
+        self.img_led_red_off = PhotoImage(file=CURRENT_PATH + "led_red_off.png")
+        self.img_led_green_on = PhotoImage(file=CURRENT_PATH + "led_green_on.png")
+        self.img_led_green_off = PhotoImage(file=CURRENT_PATH + "led_green_off.png")
+        self.img_run = PhotoImage(file=CURRENT_PATH + "run.png")
+        self.img_pause = PhotoImage(file=CURRENT_PATH + "pause.png")
+        self.img_step = PhotoImage(file=CURRENT_PATH + "step.png")
+        self.img_run_for_time = PhotoImage(file=CURRENT_PATH + "run_for_time.png")
         # get widgets
         self.btn_power = self.builder.get_object('btn_power', self.master)
         self.btn_reset = self.builder.get_object('btn_reset', self.master)
