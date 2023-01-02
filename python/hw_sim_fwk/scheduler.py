@@ -159,13 +159,12 @@ class Scheduler:
                 ####################
                 if self.time_slot == SLOT_CLOCK_RAISING_EDGE:
                     # tx/rx signals
-                    win32file.WriteFile(self.fifo_app_to_sim, str.encode(REPORT_CLOCK_HIGH +
-                                                                         self.reset.do_slot(SLOT_CLOCK_RAISING_EDGE) +
-                                                                         self.buttons.do_slot(SLOT_CLOCK_RAISING_EDGE) +
-                                                                         self.switches.do_slot(
-                                                                             SLOT_CLOCK_RAISING_EDGE) +
-                                                                         self.digital_inputs.do_slot(
-                                                                             SLOT_CLOCK_RAISING_EDGE) + "\r\n"))
+                    win32file.WriteFile(self.fifo_app_to_sim,
+                                        str.encode(REPORT_CLOCK_HIGH +
+                                        self.reset.do_slot(SLOT_CLOCK_RAISING_EDGE) +
+                                        self.buttons.do_slot(SLOT_CLOCK_RAISING_EDGE) +
+                                        self.switches.do_slot(SLOT_CLOCK_RAISING_EDGE) +
+                                        self.digital_inputs.do_slot(SLOT_CLOCK_RAISING_EDGE) + "\r\n"))
                     line = win32file.ReadFile(self.fifo_sim_to_app, FIFO_READ_BUFFER_SIZE)
                     temp_line_str = str(line[1], 'utf-8')
                     # process input signals (output signals from the point of view of the FPGA)
@@ -205,13 +204,12 @@ class Scheduler:
                 ####################
                 elif self.time_slot == SLOT_CLOCK_FALLING_EDGE:
                     # tx/rx signals
-                    win32file.WriteFile(self.fifo_app_to_sim, str.encode(REPORT_CLOCK_LOW +
-                                                                         self.reset.do_slot(SLOT_CLOCK_FALLING_EDGE) +
-                                                                         self.buttons.do_slot(SLOT_CLOCK_FALLING_EDGE) +
-                                                                         self.switches.do_slot(
-                                                                             SLOT_CLOCK_FALLING_EDGE) +
-                                                                         self.digital_inputs.do_slot(
-                                                                             SLOT_CLOCK_FALLING_EDGE) + "\r\n"))
+                    win32file.WriteFile(self.fifo_app_to_sim,
+                                        str.encode(REPORT_CLOCK_LOW +
+                                        self.reset.do_slot(SLOT_CLOCK_FALLING_EDGE) +
+                                        self.buttons.do_slot(SLOT_CLOCK_FALLING_EDGE) +
+                                        self.switches.do_slot(SLOT_CLOCK_FALLING_EDGE) +
+                                        self.digital_inputs.do_slot(SLOT_CLOCK_FALLING_EDGE) + "\r\n"))
                     line = win32file.ReadFile(self.fifo_sim_to_app, FIFO_READ_BUFFER_SIZE)
                     temp_line_str = str(line[1], 'utf-8')
                     # process input signals (output signals from the point of view of the FPGA)
