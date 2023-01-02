@@ -1,0 +1,3 @@
+oclock==1.3.0
+pygubu==0.27
+pywin32==304
