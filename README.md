@@ -1,4 +1,4 @@
-# FPGA_HW_SIM_FWK_2
+# FPGA_HW_SIM_FWK_2 (includes .exe file!)
 FPGA Hardware Simulation Framework 2.0
 
 ["Old" article in Code Project](https://www.codeproject.com/Articles/5329919/FPGA-Hardware-Simulation-Framework-FPGA-HW-SIM-FWK "FPGA_HW_SIM_FWK Article in Code Project")
@@ -22,22 +22,19 @@ FPGA Hardware Simulation Framework 2.0
 ["Old" demo video](https://www.youtube.com/watch?v=Yqu1DDGK04c "FPGA_HW_SIM_FWK Demo Video")
 
 ## Dependencies
-To install dependencies type:
+To install dependencies, copy the .bat file in python\hw_sim_fwk_2 to your virtual environment and type:
 
-  > pip install -r requirements.txt
-
-or alternatively:
-
-  > pip install pygubu
-  
-  > pip install pywin32
-  
-  > pip install oclock
+  > pip_install_requirements.bat
   
 To install the designer tool type:
 
   > pip install pygubu-designer
   
+## Executable file (approx. 9MB, all included!)
+To generate and run an executable file go to python\hw_sim_fwk_2 type:
+
+  > gen_and_run_exe.bat
+
 ## Summary
 This tool provides the following features, usually not supported by standard simulation methods:
   - GUI
