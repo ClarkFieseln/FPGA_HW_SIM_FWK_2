@@ -24,13 +24,17 @@ FPGA Hardware Simulation Framework 2.0
 ## Dependencies
 To install dependencies type:
 
+  > pip install -r requirements.txt
+
+or alternatively:
+
   > pip install pygubu
   
   > pip install pywin32
   
   > pip install oclock
   
-To install designer tool type:
+To install the designer tool type:
 
   > pip install pygubu-designer
   
