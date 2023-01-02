@@ -50,5 +50,5 @@ VHDL Simulation Tool (any tool supporting VHDL 2008) are fast enough to produce 
 The current project is an improvement of an earlier project which has been optimized for performance,
 achieving simulation rates of up to 40kHz!
 
-In order to support simulation of "asynchronous" signals, the current rate of the simulation clock is reduced to approx. 10kHz.
+In order to support simulation of "asynchronous" signals, the current rate of the simulation clock is reduced to approx. 10kHz. But the overall simulation rate continues to be 40kHz because signals are exchanged in 4 different clock phases within each clock period.
   
