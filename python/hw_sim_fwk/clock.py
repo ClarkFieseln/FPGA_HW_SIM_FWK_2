@@ -96,7 +96,7 @@ class Clock:
                 # raise event for new clock transition
                 self.__event.evt_clock.set()
                 # wait half clock period
-                time.sleep(self.CLOCK_PERIOD_SEC[0] / 2)
+                time.sleep(self.CLOCK_PERIOD_SEC[0] / configuration.TIME_SLOTS)
             else:
                 # wait to check every once in a while for a change in CLOCK_PERIOD_SEC
                 time.sleep(configuration.POLL_DELAY_SEC)

@@ -299,6 +299,7 @@ class Scheduler:
                 if self.CLOCK_PERIOD_SEC[0] > 0:
                     while (self.__event.evt_clock.is_set() is False) and \
                             (self.__event.evt_close_app.is_set() is False):
-                        time.sleep(self.CLOCK_PERIOD_SEC[0] / 20)  # 1/10th as polling-error is acceptable
+                        # 1/10th as polling-error is acceptable
+                        time.sleep(self.CLOCK_PERIOD_SEC[0] / (configuration.TIME_SLOTS*10))
                     self.__event.evt_clock.clear()
         logging.info("Thread thread_scheduler finished!")
