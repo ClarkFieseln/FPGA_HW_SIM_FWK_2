@@ -8,8 +8,8 @@ FPGA Hardware Simulation Framework 2.0
     (the circuitjs simulation may even be run in a separate computer).
   - links:
 
+    - [video](https://youtu.be/F2Q6Gl9-56A)
     - [old article in Code Project](https://www.codeproject.com/Articles/5329919/FPGA-Hardware-Simulation-Framework-FPGA-HW-SIM-FWK "FPGA_HW_SIM_FWK Article in Code Project")
-
     - [old project in GitHub](https://github.com/ClarkFieseln/FPGA_HW_SIM_FWK)
 
 ## Simulate hardware containing an FPGA programmed in VHDL interactively!
@@ -26,7 +26,7 @@ FPGA Hardware Simulation Framework 2.0
 
 ## FPGA_HW_SIM_FWK (demo video)
 
-[See old demo video](https://www.youtube.com/watch?v=Yqu1DDGK04c "FPGA_HW_SIM_FWK Demo Video")
+[demo video](https://youtu.be/F2Q6Gl9-56A)
 
 ## Dependencies
 To install dependencies go to python\hw_sim_fwk_2 and type:
