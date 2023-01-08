@@ -1,13 +1,16 @@
 # FPGA_HW_SIM_FWK_2  
 
+FPGA Hardware Simulation Framework 2.0
+
   - includes generation of .exe file!
   - includes connection to [circuitjs](https://www.falstad.com/circuit/) over websockets!
   
-FPGA Hardware Simulation Framework 2.0
+    (the circuitjs simulation may even be run in a separate computer).
+  - links:
 
-[See old article in Code Project](https://www.codeproject.com/Articles/5329919/FPGA-Hardware-Simulation-Framework-FPGA-HW-SIM-FWK "FPGA_HW_SIM_FWK Article in Code Project")
+    - [old article in Code Project](https://www.codeproject.com/Articles/5329919/FPGA-Hardware-Simulation-Framework-FPGA-HW-SIM-FWK "FPGA_HW_SIM_FWK Article in Code Project")
 
-[See old project in GitHub](https://github.com/ClarkFieseln/FPGA_HW_SIM_FWK)
+    - [old project in GitHub](https://github.com/ClarkFieseln/FPGA_HW_SIM_FWK)
 
 ## Simulate hardware containing an FPGA programmed in VHDL interactively!
 
