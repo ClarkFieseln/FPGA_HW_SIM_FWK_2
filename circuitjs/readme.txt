@@ -25,3 +25,10 @@
    you shall be able to see the behavior in the python app (digital inputs at the left-bottom side) and 
    in your VHDL simulation tool (e.g. in the waveform)
 
+NOTE:
+Part of the files in this folder are adpatations from the original source code provided here:
+https://github.com/pfalstad/circuitjs1
+According to that project the terms of the GNU General Public License have to be considered:
+"This program is free software; 
+you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation;
+either version 2 of the License, or (at your option) any later version."
