@@ -1,9 +1,13 @@
-# FPGA_HW_SIM_FWK_2  (includes generation of .exe file!)
+# FPGA_HW_SIM_FWK_2  
+
+  - includes generation of .exe file!
+  - includes connection to [circuitjs](https://www.falstad.com/circuit/) over websockets!
+  
 FPGA Hardware Simulation Framework 2.0
 
-["Old" article in Code Project](https://www.codeproject.com/Articles/5329919/FPGA-Hardware-Simulation-Framework-FPGA-HW-SIM-FWK "FPGA_HW_SIM_FWK Article in Code Project")
+[See old article in Code Project](https://www.codeproject.com/Articles/5329919/FPGA-Hardware-Simulation-Framework-FPGA-HW-SIM-FWK "FPGA_HW_SIM_FWK Article in Code Project")
 
-["Old" project in GitHub](https://github.com/ClarkFieseln/FPGA_HW_SIM_FWK)
+[See old project in GitHub](https://github.com/ClarkFieseln/FPGA_HW_SIM_FWK)
 
 ## Simulate hardware containing an FPGA programmed in VHDL interactively!
 
@@ -19,7 +23,7 @@ FPGA Hardware Simulation Framework 2.0
 
 ## FPGA_HW_SIM_FWK (demo video)
 
-["Old" demo video](https://www.youtube.com/watch?v=Yqu1DDGK04c "FPGA_HW_SIM_FWK Demo Video")
+[See old demo video](https://www.youtube.com/watch?v=Yqu1DDGK04c "FPGA_HW_SIM_FWK Demo Video")
 
 ## Dependencies
 To install dependencies go to python\hw_sim_fwk_2 and type:
@@ -30,12 +34,12 @@ To install the designer tool type:
 
   > pip install pygubu-designer
   
-## Executable file (approx. 9MB, all included!)
+## Executable file (approx. 29MB, all included!)
 To generate and run an executable file go to python\hw_sim_fwk_2 and type:
 
   > gen_and_run_exe.bat
 
-This only takes a few seconds to complete.
+This only takes a moment to complete.
 
 ## Summary
 This tool provides the following features, usually not supported by standard simulation methods:
@@ -43,6 +47,7 @@ This tool provides the following features, usually not supported by standard sim
   - concurrent input / output (up to 40kHz!)
   - interactive experience with emulated HW
   - communication interface between App and VHDL-Simulator based on named pipes (FIFOs)
+  - communication interface between App and [circuitjs](https://www.falstad.com/circuit/) based on websockets
   
 The stimulus and results exchanged between the Simulation App written in Python and the
 VHDL Simulation Tool (any tool supporting VHDL 2008) are fast enough to produce a realistic and interactive HW behavior.
