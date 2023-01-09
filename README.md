@@ -16,7 +16,7 @@ FPGA Hardware Simulation Framework 2.0
 
 ![plot](./img/simulation.png)
 
-## Architecture overview (to be updated soon!)
+## Architecture overview
 
 ![plot](./img/architecture_overview.png)
 
