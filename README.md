@@ -53,7 +53,8 @@ This tool provides the following features, usually not supported by standard sim
   - communication interface between App and [circuitjs](https://www.falstad.com/circuit/) based on websockets
   
 The stimulus and results exchanged between the Simulation App written in Python and the
-VHDL Simulation Tool (any tool supporting VHDL 2008) are fast enough to produce a realistic and interactive HW behavior.
+VHDL Simulation Tool (any tool supporting VHDL 2008), are fast enough to produce a realistic and interactive HW behavior.
+(The rate of data exchanged between Simulation App and circuitjs is also extremely high).
 
 The current project is an improvement of an earlier project which has been optimized for performance,
 achieving simulation rates of up to 40kHz!
