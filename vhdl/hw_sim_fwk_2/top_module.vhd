@@ -5,7 +5,7 @@ use ieee.std_logic_1164.ALL;
 -- top_module just "passes through" signals to and from modMCounter, switch_leds and dio modules.
 -- No additional logic here besides making sure that the intermediate signals are updated
 -- only on the rising edge of the clock or on reset.
--- TODO: we may need to pass through "asynchronouse" DIs, DOs and LEDs
+-- TODO: we may need to pass through "asynchronouse" DOs and LEDs
 -- The sender and receivers from these signals are the Hardware Simulation Framework and the Testbench.
 -- ####################################################################################################
 entity top_module is
@@ -106,7 +106,7 @@ begin
     --      The current approach focuses on the fact that we have a top_module which
     --      under normal conditions would add some logic to the design.
     -- ###########################################################################################
-    proc_common : process(clock_in, reset_in) -- , switch_in, button_in)
+    proc_common : process(clock_in, reset_in, di_in(NR_DIS - 1 downto NR_DIS/2)) -- , switch_in, button_in)
     begin
         -- in common
         clock_tm <= clock_in;
@@ -127,6 +127,17 @@ begin
             led_out           <= led_tm;
             di_tm             <= di_in;
             do_out            <= do_tm;
+        -- asynchronous DIs
+        elsif rising_edge(di_in(NR_DIS - 1)) then
+            di_tm(NR_DIS - 1) <= di_in(NR_DIS - 1); 
+        elsif rising_edge(di_in(NR_DIS - 2)) then
+            di_tm(NR_DIS - 2) <= di_in(NR_DIS - 2); 
+        elsif rising_edge(di_in(NR_DIS - 3)) then
+            di_tm(NR_DIS - 3) <= di_in(NR_DIS - 3); 
+        elsif rising_edge(di_in(NR_DIS - 4)) then
+            di_tm(NR_DIS - 4) <= di_in(NR_DIS - 4);     
+        elsif rising_edge(di_in(NR_DIS - 5)) then
+            di_tm(NR_DIS - 5) <= di_in(NR_DIS - 5);
         end if;
     end process proc_common;
 end Behavioral;
