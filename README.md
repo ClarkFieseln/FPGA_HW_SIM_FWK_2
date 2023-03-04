@@ -48,7 +48,7 @@ This only takes a moment to complete.
 This tool provides the following features, usually not supported by standard simulation methods:
   - GUI
   - concurrent input / output
-  - interactive experience with emulated HW
+  - interactive user experience with emulated HW
   - communication interface between App and VHDL-Simulator based on named pipes (FIFOs)
   - communication interface between App and [circuitjs](https://www.falstad.com/circuit/) based on websockets
   
