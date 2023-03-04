@@ -47,7 +47,7 @@ This only takes a moment to complete.
 ## Summary
 This tool provides the following features, usually not supported by standard simulation methods:
   - GUI
-  - concurrent input / output (up to 40kHz!)
+  - concurrent input / output
   - interactive experience with emulated HW
   - communication interface between App and VHDL-Simulator based on named pipes (FIFOs)
   - communication interface between App and [circuitjs](https://www.falstad.com/circuit/) based on websockets
@@ -57,7 +57,7 @@ VHDL Simulation Tool (any tool supporting VHDL 2008), are fast enough to produce
 (The rate of data exchanged between Simulation App and circuitjs is also extremely high).
 
 The current project is an improvement of an earlier project which has been optimized for performance,
-achieving simulation rates of up to 40kHz!
+achieving simulation rates of up to 40kHz! (faster signals will no longer be processed in real-time but the simulation will still be very fast).
 
 In order to support simulation of "asynchronous" signals, the current rate of the simulation clock is reduced to approx. 10kHz. But the overall simulation rate continues to be 40kHz because signals are exchanged in 4 different clock phases within each clock period.
   
