@@ -123,7 +123,7 @@ class DigitalInputs:
 
     def update_dis_sync(self):
         # update DIS with __di_sync_count
-        self.DIS = self.DIS[0: len(str(configuration.DI_INDEX)) + 1 + configuration.NR_SYNC_DIS] + \
+        self.DIS = self.DIS[0: len(str(configuration.DI_INDEX)) + 1 + configuration.NR_ASYNC_DIS] + \
                    self.FMT_SYNC.format(self.__di_sync_count) + self.DIS[-1]
         # inform GUI
         # self.__event.evt_gui_di_update.set()  # update instead in do_slot() when self.DIS != self.DIS_LAST
@@ -152,7 +152,7 @@ class DigitalInputs:
     def update_dis_async(self):
         # update DIS with __di_async_count
         self.DIS = self.DIS[0: len(str(configuration.DI_INDEX)) + 1] + \
-                   self.FMT_ASYNC.format(self.__di_async_count) + self.DIS[-(configuration.NR_ASYNC_DIS + 1):]
+                   self.FMT_ASYNC.format(self.__di_async_count) + self.DIS[-(configuration.NR_SYNC_DIS + 1):]
         # inform GUI
         # self.__event.evt_gui_di_update.set()  # update instead in do_slot() when self.DIS != self.DIS_LAST
 
