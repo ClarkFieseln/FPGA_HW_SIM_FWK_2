@@ -53,6 +53,7 @@ This tool provides the following features, usually not supported by standard sim
   - interactive user experience with emulated HW
   - synchronized communication interface between App and VHDL-Simulator based on named pipes (FIFOs)
   - synchronized communication interface between App and [circuitjs](https://www.falstad.com/circuit/) based on websockets
+    (synchronization is achieved using the original/unmodified circuitjs websocket API)
   
 The stimulus and results exchanged between the Simulation App written in Python and the
 VHDL Simulation Tool (any tool supporting VHDL 2008), are fast enough to produce a realistic and interactive HW behavior.
