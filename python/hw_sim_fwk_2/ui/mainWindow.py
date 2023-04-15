@@ -15,6 +15,7 @@ from buttons import Buttons
 from switches import Switches
 from digital_inputs import DigitalInputs
 from digital_outputs import DigitalOutputs
+from voltage_output import VoltageOutput
 from leds import Leds
 import time
 import os
@@ -54,12 +55,18 @@ class Event:
     evt_clock = oclock.Event()
     evt_close_app = oclock.Event()
     evt_clock_finished = oclock.Event()
+    # events for circuitjs
+    # NOTE: using a bool flag instead, seems to NOT be affected by the value of POLL_DELAY_SEC_CIRCUITJS
+    #       as much as events are affected (e.g. evt_time_message_received)
+    evt_time_message_received = oclock.Event()
+    evt_vo_message_send = oclock.Event()
     # these events improve performance by indicating exactly when the GUI shall update which widgets.
     # NOTE: using individual events for each of the DIs and DOs to "fine tune" GUI update decreases performance!
     evt_gui_di_websocket_connected = oclock.Event()
     evt_gui_di_websocket_disconnected = oclock.Event()
     evt_gui_di_update = oclock.Event()
     evt_gui_do_update = oclock.Event()
+    evt_gui_vo_update = oclock.Event()
     evt_gui_temperature_update = oclock.Event()
     evt_gui_int_out_update = oclock.Event()
     evt_gui_led_update = oclock.Event()
@@ -78,6 +85,7 @@ class MainWindow:
     clock = None
     digital_inputs = None
     digital_outputs = None
+    voltage_output = None
     leds = None
     reset = None
     switches = None
@@ -101,10 +109,11 @@ class MainWindow:
         clock = None
         digital_inputs = None
         digital_outputs = None
+        voltage_output = None
         leds = None
         reset = None
         switches = None
-        buttons = None
+        buttons = None        
 
     # object/instance
     ref_scheduler = RefScheduler()
@@ -318,21 +327,23 @@ class MainWindow:
         self.entry_clk_period_ms.insert(0, str(self.CLOCK_PERIOD_SEC[0] * 1000))
         self.reset = Reset(event)
         self.leds = Leds(event)
-        self.switches = Switches(event)
+        self.switches = Switches(event)        
         self.digital_inputs = DigitalInputs(event, self.CLOCK_PERIOD_SEC)
         self.digital_outputs = DigitalOutputs(event)
+        self.voltage_output = VoltageOutput(event)
         self.buttons = Buttons(event)
         # fill "after" objects have been created
-        self.RefScheduler.clock = self.clock
-        self.RefScheduler.digital_inputs = self.digital_inputs
-        self.RefScheduler.digital_outputs = self.digital_outputs
-        self.RefScheduler.leds = self.leds
-        self.RefScheduler.reset = self.reset
-        self.RefScheduler.switches = self.switches
-        self.RefScheduler.buttons = self.buttons
+        self.ref_scheduler.clock = self.clock
+        self.ref_scheduler.digital_inputs = self.digital_inputs
+        self.ref_scheduler.digital_outputs = self.digital_outputs
+        self.ref_scheduler.voltage_output = self.voltage_output
+        self.ref_scheduler.leds = self.leds
+        self.ref_scheduler.reset = self.reset
+        self.ref_scheduler.switches = self.switches
+        self.ref_scheduler.buttons = self.buttons
         # instantiate scheduler
         #######################
-        self.scheduler = Scheduler(event, self.CLOCK_PERIOD_SEC, self.RefScheduler)
+        self.scheduler = Scheduler(event, self.CLOCK_PERIOD_SEC, self.ref_scheduler)
         self.scheduler.remaining_clock_periods_to_run = int(configuration.RUN_FOR_CLOCK_PERIODS)
 
     def close_application(self):
@@ -397,11 +408,21 @@ class MainWindow:
                 event.evt_gui_led_update.clear()
                 for i in range(configuration.NR_LEDS):
                     if self.leds.LED_ON[i] == 1:
-                        self.led_wdg[i].config(image=self.img_led_red_on)
-                        self.led_wdg[i].image = self.img_led_red_on
+                        # WORKAROUND: so long we test example with f1 and f2 out
+                        if (i > 4) & (i < 11):
+                            self.led_wdg[i+1].config(image=self.img_led_red_on)
+                            self.led_wdg[i+1].image = self.img_led_red_on
+                        else:
+                            self.led_wdg[i].config(image=self.img_led_red_on)
+                            self.led_wdg[i].image = self.img_led_red_on
                     else:
-                        self.led_wdg[i].config(image=self.img_led_red_off)
-                        self.led_wdg[i].image = self.img_led_red_off
+                        # WORKAROUND: so long we test example with f1 and f2 out
+                        if (i > 4) & (i < 11):
+                            self.led_wdg[i+1].config(image=self.img_led_red_off)
+                            self.led_wdg[i+1].image = self.img_led_red_off
+                        else:
+                            self.led_wdg[i].config(image=self.img_led_red_off)
+                            self.led_wdg[i].image = self.img_led_red_off
             # digital inputs
             if event.evt_gui_di_update.is_set():
                 event.evt_gui_di_update.clear()
