@@ -24,11 +24,13 @@ architecture arch of hw_sim_fwk_tb is
     constant FIFO_PATH                    : string  := "\\.\pipe\";  
     constant STIMULUS_FILE_NAME           : string  := FIFO_PATH & "fifo_app_to_sim";
     constant OUTPUT_FILE_NAME             : string  := FIFO_PATH & "fifo_sim_to_app";
-    constant NR_DIS                       : integer := 10;    
+    constant NR_DIS                       : integer := 10;
+    constant NR_DIS_SYNC                  : integer := NR_DIS;
     constant NR_SWITCHES                  : integer := 6;    
     constant NR_BUTTONS                   : integer := 6;    
     constant NR_LEDS                      : integer := 12;    
     constant NR_DOS                       : integer := 10;
+    constant NR_VO_BITS                   : integer := 10;
     -- signals:
     -- common signals
     -- ##############
@@ -57,6 +59,10 @@ architecture arch of hw_sim_fwk_tb is
     signal button_tb_dummy                : std_logic_vector(NR_BUTTONS - 1 downto 0);
     --Outputs
     signal led_tb                         : std_logic_vector(NR_LEDS - 1 downto 0);  
+    -- output_voltage
+    -- ##############
+    --Outputs
+    signal vo_tb                          : std_logic_vector(NR_VO_BITS - 1 downto 0);
 begin
     -- asserts
     assert ((NR_BUTTONS = NR_SWITCHES)) report ("Unequal nr. of switches and buttons = " & integer'image(NR_SWITCHES) & ", " & integer'image(NR_BUTTONS)) severity failure;
@@ -75,7 +81,9 @@ begin
             NR_LEDS     => NR_LEDS,
             -- dio
             NR_DIS      => NR_DIS,
-            NR_DOS      => NR_DOS
+            NR_DOS      => NR_DOS,
+            -- vo
+            NR_VO_BITS  => NR_VO_BITS
         )
         port map(
             -- common
@@ -90,7 +98,9 @@ begin
             led_out           => led_tb,
             -- dio
             di_in             => di_tb,
-            do_out            => do_tb
+            do_out            => do_tb,
+            -- vo
+            vo_out            => vo_tb
         );        
  
     -- instantiate hw scheduler, connected to external scheduler
@@ -105,7 +115,8 @@ begin
             NR_SWITCHES               => NR_SWITCHES,
             NR_DIS                    => NR_DIS,
             NR_DOS                    => NR_DOS,
-            NR_LEDS                   => NR_LEDS
+            NR_LEDS                   => NR_LEDS,
+            NR_VO_BITS                => NR_VO_BITS
         )
         port map(
             hw_clock(0) => hw_clock_tb,
@@ -114,7 +125,8 @@ begin
             hw_switch   => switch_tb,
             hw_di       => di_tb,
             hw_do       => do_tb,
-            hw_led      => led_tb
+            hw_led      => led_tb,
+            hw_vo       => vo_tb
         );     
                   
     -- PROCESSES 

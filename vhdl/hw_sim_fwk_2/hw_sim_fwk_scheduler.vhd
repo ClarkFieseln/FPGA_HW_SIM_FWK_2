@@ -23,7 +23,8 @@ entity hw_sim_fwk_scheduler is
         NR_SWITCHES               : integer := 6;
         NR_DIS                    : integer := 10;
         NR_DOS                    : integer := 10;
-        NR_LEDS                   : integer := 12
+        NR_LEDS                   : integer := 12;
+        NR_VO_BITS                : integer := 10
     );
     port(
         hw_clock  : out std_logic_vector(0 downto 0);
@@ -32,15 +33,18 @@ entity hw_sim_fwk_scheduler is
         hw_switch : out std_logic_vector(NR_SWITCHES - 1 downto 0);
         hw_di     : out std_logic_vector(NR_DIS - 1 downto 0);
         hw_do     : in std_logic_vector(NR_DOS - 1 downto 0);
-        hw_led    : in std_logic_vector(NR_LEDS - 1 downto 0)
+        hw_led    : in std_logic_vector(NR_LEDS - 1 downto 0);
+        hw_vo     : in std_logic_vector(NR_VO_BITS - 1 downto 0)
     );
     -- signals
     constant NR_INPUT_SIGNALS    : integer := 5;    
-    constant NR_OUTPUT_SIGNALS   : integer := 2;
-    constant MAX_IN_VECTOR_SIZE  : integer := maximum((NR_BUTTONS,NR_SWITCHES,NR_DIS));
-    constant MAX_OUT_MSG_SIZE    : integer := NR_DOS + NR_LEDS + 6; -- +6 to cover 2 times index, separator, comma
+    constant NR_OUTPUT_SIGNALS   : integer := 3;
+    constant MAX_IN_VECTOR_SIZE  : integer := NR_DIS; -- maximum(NR_BUTTONS,NR_SWITCHES,NR_DIS);
+    constant MAX_OUT_VECTOR_SIZE  : integer := NR_LEDS;  -- maximum(NR_DOS,NR_LEDS,NR_VO_BITS);
+    constant MAX_OUT_MSG_SIZE    : integer := NR_DOS + NR_LEDS + NR_VO_BITS + 9; -- +9 to cover 2 times index, separator, comma
     constant LED_MSG_SIZE        : integer := NR_LEDS + 3; -- +3 to account for index, separator, comma
     constant DO_MSG_SIZE         : integer := NR_DOS + 3; -- +3 to account for index, separator, comma
+    constant VO_MSG_SIZE         : integer := NR_VO_BITS + 3; -- +3 to account for index, separator, comma
     constant hw_clock_index      : integer := 0;
     constant hw_reset_index      : integer := 1;
     constant hw_button_index     : integer := 2;
@@ -48,16 +52,18 @@ entity hw_sim_fwk_scheduler is
     constant hw_di_index         : integer := 4;
     constant hw_do_index         : integer := 0;
     constant hw_led_index        : integer := 1;
-    type INPUT_SIGNAL_ARRAY is array (0 to NR_INPUT_SIGNALS-1) of std_logic_vector;
+    constant hw_vo_index         : integer := 2;
+    type INPUT_SIGNAL_ARRAY is array (0 to NR_INPUT_SIGNALS-1) of std_logic_vector(MAX_IN_VECTOR_SIZE-1 downto 0);
     type INPUT_SIGNAL_LEN_ARRAY is array (0 to NR_INPUT_SIGNALS-1) of integer;  
-    signal input_signal          : INPUT_SIGNAL_ARRAY(open)(MAX_IN_VECTOR_SIZE-1 downto 0) := (others => (others => '0'));
+    signal input_signal          : INPUT_SIGNAL_ARRAY := (others => (others => '0'));
     constant input_signal_len    : INPUT_SIGNAL_LEN_ARRAY := (1,1,NR_BUTTONS,NR_SWITCHES,NR_DIS);  
-    type OUTPUT_SIGNAL_ARRAY is array (0 to NR_OUTPUT_SIGNALS-1) of std_logic_vector;
+    type OUTPUT_SIGNAL_ARRAY is array (0 to NR_OUTPUT_SIGNALS-1) of std_logic_vector(MAX_OUT_VECTOR_SIZE-1 downto 0);
     type OUTPUT_SIGNAL_LEN_ARRAY is array (0 to NR_OUTPUT_SIGNALS-1) of integer;  
     shared variable out_msg      : string(MAX_OUT_MSG_SIZE downto 1);
     shared variable out_len      : integer := 0;
     signal hw_led_prev           : std_logic_vector(NR_LEDS - 1 downto 0);
     signal hw_do_prev            : std_logic_vector(NR_DOS - 1 downto 0);
+    signal hw_vo_prev            : std_logic_vector(NR_VO_BITS - 1 downto 0);
 end hw_sim_fwk_scheduler;
 
 architecture arch of hw_sim_fwk_scheduler is
@@ -69,12 +75,25 @@ begin
     hw_switch(input_signal_len(hw_switch_index)-1 downto 0) <= input_signal(hw_switch_index)(input_signal_len(hw_switch_index)-1 downto 0);
     hw_di(input_signal_len(hw_di_index)-1 downto 0) <= input_signal(hw_di_index)(input_signal_len(hw_di_index)-1 downto 0);
     
+    -- simulation proc_vo_out
+    -- ######################
+    proc_vo_out : process(hw_vo)
+    begin
+        if (hw_vo /= hw_vo_prev) then
+            -- out_msg((VO_MSG_SIZE + out_len) downto (out_len + 1)) := to_string(hw_vo_index) & ":" & to_string(hw_vo) & ","; -- need VHDL-2008
+            out_msg((VO_MSG_SIZE + out_len) downto (out_len + 1)) := integer'image(hw_vo_index) & ":" & slv_to_string(hw_vo) & ",";
+            out_len := out_len + VO_MSG_SIZE;
+            hw_vo_prev <= hw_vo;
+        end if;
+    end process proc_vo_out;
+    
     -- simulation proc_led_out
     -- #######################
     proc_led_out : process(hw_led)
     begin
-        if hw_led /= hw_led_prev then
-            out_msg((LED_MSG_SIZE + out_len) downto (out_len + 1)) := to_string(hw_led_index) & ":" & to_string(hw_led) & ",";
+        if (hw_led /= hw_led_prev) then
+            -- report("hw_led string = " & slv_to_string(hw_led));
+            out_msg((LED_MSG_SIZE + out_len) downto (out_len + 1)) := integer'image(hw_led_index) & ":" & slv_to_string(hw_led) & ",";
             out_len := out_len + LED_MSG_SIZE;
             hw_led_prev <= hw_led;
         end if;
@@ -84,8 +103,8 @@ begin
     -- ######################
     proc_do_out : process(hw_do)
     begin
-        if hw_do /= hw_do_prev then
-            out_msg((DO_MSG_SIZE + out_len) downto (out_len + 1)) := to_string(hw_do_index) & ":" & to_string(hw_do) & ",";
+        if (hw_do /= hw_do_prev) then
+            out_msg((DO_MSG_SIZE + out_len) downto (out_len + 1)) := integer'image(hw_do_index) & ":" &slv_to_string(hw_do) & ",";
             out_len := out_len + DO_MSG_SIZE;
             hw_do_prev <= hw_do;
         end if;
@@ -108,7 +127,7 @@ begin
     begin
         -- initialization?
         -- ###############
-        if initialized = false then
+        if (initialized = false) then
             initialized := true;          
             -- open stimulus FIFO (named-pipe) created in external simulation app - VHDL is NOT able to create named pipes!
             loop
@@ -134,12 +153,12 @@ begin
             flush(o_file);                           
             -- process stimulus data
             ------------------------           
-            while i_line'length /= 0 loop                
+            while (i_line'length /= 0) loop                
                 read(i_line, index);
                 if index < NR_INPUT_SIGNALS then
                     read(i_line, separator);                      
                     read(i_line, stimulus_string(input_signal_len(index) downto 1));
-                    read(i_line, last_comma);     
+                    read(i_line, last_comma);                        
                     -- process input signal                               
                     for i in 0 to input_signal_len(index)-1 loop                                                       
                         input_signal(index)(i) <= character_to_std_logic(stimulus_string(i+1));
@@ -177,7 +196,7 @@ begin
                 else
                     write(o_file, "*");
                 end if;
-                flush(o_file); 
+                flush(o_file);    
                 -- process stimulus data
                 ------------------------
                 while i_line'length /= 0 loop                    
@@ -185,11 +204,11 @@ begin
                     if index < NR_INPUT_SIGNALS then
                         read(i_line, separator);                           
                         read(i_line, stimulus_string(input_signal_len(index) downto 1));
-                        read(i_line, last_comma);
+                        read(i_line, last_comma);                                        
                         -- process signal                       
                         for i in 0 to input_signal_len(index)-1 loop                                                             
                             input_signal(index)(i) <= character_to_std_logic(stimulus_string(i+1));
-                        end loop;                       
+                        end loop;                                 
                         -- async reset?
                         if index = hw_reset_index and stimulus_string(1) = '1' then
                             input_signal(hw_button_index) <= (others => '0');  

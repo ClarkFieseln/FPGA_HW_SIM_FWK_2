@@ -6,7 +6,7 @@ entity switch_leds is
     generic(
         NR_SWITCHES : integer := 2;
         NR_BUTTONS  : integer := 2;
-        NR_LEDS     : integer := 2
+        NR_LEDS     : integer := 4
     );
     port(
         reset  : in  std_logic;
@@ -25,14 +25,14 @@ begin
     proc_switch_leds : process(reset, clock)
     begin
         -- asynchronous reset 
-        if reset = '1' then
+        if (reset = '1') then
             led_reg <= (others => '0');
         -- synchronous events
         elsif rising_edge(clock) then
-            -- set lower LEDs by "oring" buttons and switches
-            led_reg(NR_LEDS/2-1 downto 0) <= switch(NR_SWITCHES-1 downto 0) or button(NR_BUTTONS-1 downto 0);
-            -- set upper LEDs by "anding" buttons and switches
-            led_reg(NR_LEDS-1 downto NR_LEDS/2) <= switch(NR_SWITCHES-1 downto 0) and button(NR_BUTTONS-1 downto 0);
+            -- set lower LEDs by "oring" buttons and switches            
+            led_reg((NR_LEDS/2)-1 downto 0) <= switch(NR_SWITCHES-1 downto 0) or button(NR_BUTTONS-1 downto 0);
+            -- set upper LEDs by "anding" buttons and switches            
+            led_reg(NR_LEDS-1 downto (NR_LEDS/2)) <= switch(NR_SWITCHES-1 downto 0) and button(NR_BUTTONS-1 downto 0);            
         end if;
     end process proc_switch_leds;
     -- output signals

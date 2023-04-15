@@ -12,6 +12,7 @@ use ieee.std_logic_textio.all;
 
 
 package hw_sim_fwk_common is  
+  function slv_to_string ( slv_value : std_logic_vector) return string;
   function binary_to_character(value : in std_logic) return character;
   function std_logic_to_character(value : in std_logic) return character;
   function character_to_bit(value : in character) return bit;
@@ -19,6 +20,15 @@ package hw_sim_fwk_common is
 end hw_sim_fwk_common;
 
 package body hw_sim_fwk_common is
+    function slv_to_string ( slv_value: std_logic_vector) return string is
+        variable str_temp : string (slv_value'length downto 1) := (others => NUL);
+    begin
+        for i in slv_value'length downto 1 loop
+            str_temp(i) := std_logic'image(slv_value((i-1)))(2);
+        end loop;
+        return str_temp;
+    end function;
+
     function binary_to_character(value : in std_logic) return character is
     begin
         return character'val(to_integer(unsigned'('0' & value)));
