@@ -1,33 +1,35 @@
-<meta name="viewport" content="width=820">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Circuit Simulator Applet</title>
-<link rel="SHORTCUT ICON" href="favicon.ico">
 <body>
 <hr>
 
-<iframe id="circuitFrame" src="circuitjs.html?startCircuit=../../fpga_hw_sim_fwk.txt" width="800" height="550"></iframe>
+<iframe id="circuitFrame" src="circuitjs.html?startCircuit=../../sensor.txt" width="800" height="550"></iframe>
 
 <p>
 <p>
 <button onclick="sim.setSimRunning(true)">Start</button>
 <button onclick="sim.setSimRunning(false)">Stop</button>
+<!--
 </p><p>
 extsin frequency:
 <input id="freq" value="10">
 <br>
 extsin amplitude:
 <input id="ampl" value="10">
+-->
 </p>
 <div id="info">time = 0.078
 <br>running = false
-<br>V(vsense) = 3.367
+<br>V(Vs) = 3.367
+<br>V(Ve) = 5
+<!--
 <br>counter value = <tt>11000011</tt> = 195
-<br>V(D0) = 5
 <br>resistor 1 voltage diff = 3.367
 <br>resistor 1 current = 3.367 mA
 <br>resistor 2 voltage diff = -9.83
 <br>resistor 2 current = -9.83 mA
+-->
 </div>
-
 <p>
 <p>
   <body onload="doLoad()">
