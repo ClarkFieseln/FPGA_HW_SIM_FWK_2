@@ -8,14 +8,15 @@ LOGGING_LEVEL = "logging.INFO"
 # GUI update rate (20Hz is usually ok, but don't set it to a value greater than your monitor can display!)
 GUI_UPDATE_RATE_IN_HZ = 20
 
-# NOTE: set this value only for TURBO mode!
-#       in other cases, this value is automatically adapted in clock.py as 1/CLOCK_PERIOD_EXTERNAL
-#       in order to update the actual rate on the GUI every "1 second"
-ESTIMATED_CLOCK_SIMULATION_RATE: int = 10000  # 22000
-
 # WARNING: this value may have an important effect on simulation performance!
 #          values below (1/GUI_UPDATE_RATE_IN_HZ) are not recommended
 POLL_DELAY_SEC: float = 0.05  # 0.1  # 0.5
+# NOTE1: threads scheduler.thread_scheduler() and websocket_server.vo_thread()
+#        shall exchange data as fast as possible but they need to wait a little
+#        bit to give other threads a chance to process their data.
+# NOTE2: using a bool flag seems to NOT be affected by the value of POLL_DELAY_SEC_CIRCUITJS
+#        as much as events are affected (e.g. evt_time_message_received)
+POLL_DELAY_SEC_CIRCUITJS: float = 0.00001  # 0.00001 (buff 75 BEST)  # 0.001 (buff 120)  # 0.0001 (buff 120) # 0.000001 (buff 200)
 
 # nr. of widgets on board (as in VHDL)
 NR_BUTTONS = 6
@@ -23,8 +24,9 @@ NR_SWITCHES = 6
 NR_DIS = 10
 NR_DOS = 10
 NR_LEDS = 12
+NR_VO_BITS = 10
 # nr. of sync and async DIs
-NR_ASYNC_DIS = 5
+NR_ASYNC_DIS = 0
 assert(NR_ASYNC_DIS <= NR_DIS)
 NR_SYNC_DIS = NR_DIS - NR_ASYNC_DIS
 
@@ -38,6 +40,7 @@ DI_INDEX = "4"
 # in FIFO data
 DO_INDEX = "0"
 LED_INDEX = "1"
+VO_INDEX = "2"
 # NOTE: adapt buffer sizes depending on above definitions,
 #       buffer sizes may hold "several" messages of the form "ID:DATA,"
 FIFO_WRITE_BUFFER_SIZE = 256
@@ -50,6 +53,20 @@ DO_FILE_DIS = 2
 DO_RND_DIS = 3
 DO_CNT_DIS = 4
 DO_DIS = DO_CIRCUITJS_DIS
+
+# NOTE: set ESTIMATED_CLOCK_SIMULATION_RATE only for TURBO mode!
+#       in other cases, this value is automatically adapted in clock.py as 1/CLOCK_PERIOD_EXTERNAL
+#       in order to update the actual rate on the GUI every "1 second"
+#       We need e.g. 50 for circuitjs, 5000 otherwise.
+if DO_DIS == DO_CIRCUITJS_DIS:
+    ESTIMATED_CLOCK_SIMULATION_RATE: int = 50
+else:
+    ESTIMATED_CLOCK_SIMULATION_RATE: int = 5000
+
+# use TIME_STEP_CIRCUITJS as alternative to timestamp_ms in vo_thread()
+# TIME_STEP_CIRCUITJS shall have the same value as in circuitjs
+# we need var timestamp_ms = round(sim.getTime()*1000) in didStep() in fpga_hw_sim_fwk.js
+TIME_STEP_CIRCUITJS: float = 0.0000010416666666666667
 
 FIFO_PATH = "\\\\.\\pipe\\"
 

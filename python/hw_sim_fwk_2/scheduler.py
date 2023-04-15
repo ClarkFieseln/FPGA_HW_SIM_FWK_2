@@ -7,6 +7,7 @@ import threading
 import tkinter
 import time
 from common_fifo import create_w_fifo, create_r_fifo
+from websocket_server import WebSocketServer
 
 
 # from https://discuss.python.org/t/higher-resolution-timers-on-windows/16153
@@ -69,8 +70,10 @@ class Scheduler:
     reset = None
     switches = None
     buttons = None
+    websocket_server = None
     fifo_app_to_sim = None
     fifo_sim_to_app = None
+    is_time_message_received = False
 
     def __init__(self, event, clock_period_sec, ref):
         logging.info('init Scheduler')
@@ -81,21 +84,29 @@ class Scheduler:
         self.switches = ref.switches
         self.digital_inputs = ref.digital_inputs
         self.digital_outputs = ref.digital_outputs
-        self.buttons = ref.buttons
+        self.voltage_output = ref.voltage_output
+        self.buttons = ref.buttons        
         self.FILE_NAME_FIFO_APP_TO_SIM = configuration.FIFO_PATH + "fifo_app_to_sim"
         self.FILE_NAME_FIFO_SIM_TO_APP = configuration.FIFO_PATH + "fifo_sim_to_app"
         self.REPORT_CLOCK_HIGH = configuration.CLOCK_INDEX + ":1,"
         self.REPORT_CLOCK_LOW = configuration.CLOCK_INDEX + ":0,"
         self.LED_HEADER = configuration.LED_INDEX + ":"
         self.DO_HEADER = configuration.DO_INDEX + ":"
+        self.VO_HEADER = configuration.VO_INDEX + ":"
         scheduler_thread = threading.Thread(name="scheduler_thread", target=self.thread_scheduler)
         scheduler_thread.start()
-
+    
     def restart_counters(self):
         self.restart = True
 
     def do_slot(self, slot_nr, input_fifo):
         logging.debug("slot_nr = " + str(slot_nr) + ", input data = " + input_fifo)
+        vo_start = input_fifo.find(self.VO_HEADER)
+        if vo_start != -1:
+            self.voltage_output.do_slot(slot_nr, input_fifo[vo_start +
+                                                             len(self.VO_HEADER):vo_start +
+                                                             len(self.VO_HEADER) +
+                                                             configuration.NR_VO_BITS])
         led_start = input_fifo.find(self.LED_HEADER)
         if led_start != -1:
             self.leds.do_slot(slot_nr, input_fifo[led_start +
@@ -156,12 +167,30 @@ class Scheduler:
                     # start time
                     if self.start_time_abs == 0:
                         self.start_time_abs = time.time_ns()
-                    report = False
+                    report = False              
+                          
                     # which time slot?
                     # clock raising edge
                     ####################
-                    if self.time_slot == SLOT_CLOCK_RAISING_EDGE:
+                    if self.time_slot == SLOT_CLOCK_RAISING_EDGE:                        
+                        # wait doing nothing until new event from ciruitjs is received
+                        # with this we simulate a perfect synched input of data from circuitjs
+                        ######################################################################            
+                        if configuration.DO_DIS == configuration.DO_CIRCUITJS_DIS:
+                            # NOTE: events seem to be very sensitive to the value POLL_DELAY_SEC_CIRCUITJS
+                            '''
+                            while ((self.__event.evt_time_message_received.is_set() is False) and \
+                                (self.__event.evt_close_app.is_set() is False)):                           
+                                # NOTE: we need to sleep here, otherwiese websocket message reception is blocked too often
+                                time.sleep(configuration.POLL_DELAY_SEC_CIRCUITJS)                            
+                            self.__event.evt_time_message_received.clear()
+                            # '''
+                            while ((WebSocketServer.gotNewMessage() is False) and \
+                                (self.__event.evt_close_app.is_set() is False)):                           
+                                # NOTE: we need to sleep here, otherwiese websocket message reception is blocked too often
+                                time.sleep(configuration.POLL_DELAY_SEC_CIRCUITJS)      
                         # tx/rx signals
+                        ###############
                         win32file.WriteFile(self.fifo_app_to_sim,
                                             str.encode(self.REPORT_CLOCK_HIGH +
                                                        self.reset.do_slot(SLOT_CLOCK_RAISING_EDGE) +
@@ -175,7 +204,14 @@ class Scheduler:
                             self.do_slot(SLOT_CLOCK_RAISING_EDGE, temp_line_str)
                         # increment clock periods
                         self.clock_periods = self.clock_periods + 1
-                        self.nr_cycles = self.nr_cycles + 1
+                        self.nr_cycles = self.nr_cycles + 1   
+                        # we can now send data to circuitjs
+                        ###################################
+                        if configuration.DO_DIS == configuration.DO_CIRCUITJS_DIS:
+                            # NOTE: alternatively, we could set the event:
+                            #       self.__event.evt_vo_message_send.set()
+                            #       but then it takes much longer to send the output message in vo_thread()
+                            WebSocketServer.sendVoltageMessage()
                     # clock high level
                     ##################
                     elif self.time_slot == SLOT_CLOCK_HIGH_LEVEL:
@@ -206,7 +242,7 @@ class Scheduler:
                             self.do_slot(SLOT_CLOCK_HIGH_LEVEL, temp_line_str)
                     # clock falling edge
                     ####################
-                    elif self.time_slot == SLOT_CLOCK_FALLING_EDGE:
+                    elif self.time_slot == SLOT_CLOCK_FALLING_EDGE:     
                         # tx/rx signals
                         win32file.WriteFile(self.fifo_app_to_sim,
                                             str.encode(self.REPORT_CLOCK_LOW +
@@ -231,7 +267,7 @@ class Scheduler:
                             # if time expired then pause
                             if self.remaining_clock_periods_to_run == 0:
                                 self.__event.evt_pause.set()
-                                self.__event.evt_resume.clear()
+                                self.__event.evt_resume.clear()                                
                     # clock low level
                     #################
                     else:  # elif self.time_slot == SLOT_CLOCK_LOW_LEVEL:
@@ -260,8 +296,11 @@ class Scheduler:
                         # process input signals (output signals from the point of view of the FPGA)
                         if temp_line_str != "*":
                             self.do_slot(SLOT_CLOCK_LOW_LEVEL, temp_line_str)
+                            
                     # increment time slot
+                    #####################
                     self.time_slot = (self.time_slot + 1) % TIME_SLOTS
+                                                                    
                 # PAUSE
                 #######
                 if self.__event.evt_pause.is_set() is True:
@@ -296,7 +335,7 @@ class Scheduler:
                         diff = end_time - self.start_time_abs
                         if diff != 0:
                             self.simulation_frequency = \
-                                configuration.ESTIMATED_CLOCK_SIMULATION_RATE / (diff / 1000000000)
+                                configuration.ESTIMATED_CLOCK_SIMULATION_RATE / (diff / 1000000000)                            
                         self.start_time_abs = end_time
                         self.nr_cycles = 0
                     # wait for clock signal or continue if TURBO mode
@@ -310,3 +349,7 @@ class Scheduler:
             logging.info("Thread thread_scheduler finished!")
         else:
             logging.info("Thread thread_scheduler finished!")
+            
+            
+            
+            

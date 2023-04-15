@@ -68,6 +68,9 @@ class InitApp(object):
                 if "POLL_DELAY_SEC" in self.config["myConfig"]:
                     configuration.POLL_DELAY_SEC = self.config.getfloat('myConfig', 'POLL_DELAY_SEC')
                     logging.info("POLL_DELAY_SEC = " + str(configuration.POLL_DELAY_SEC))
+                if "POLL_DELAY_SEC_CIRCUITJS" in self.config["myConfig"]:
+                    configuration.POLL_DELAY_SEC_CIRCUITJS = self.config.getfloat('myConfig', 'POLL_DELAY_SEC_CIRCUITJS')
+                    logging.info("POLL_DELAY_SEC_CIRCUITJS = " + str(configuration.POLL_DELAY_SEC_CIRCUITJS))
                 if "NR_BUTTONS" in self.config["myConfig"]:
                     configuration.NR_BUTTONS = self.config.getint('myConfig', 'NR_BUTTONS')
                     logging.info("NR_BUTTONS = " + str(configuration.NR_BUTTONS))
@@ -135,6 +138,9 @@ class InitApp(object):
                 if "DO_DIS" in self.config["myConfig"]:
                     configuration.DO_DIS = self.config.getint('myConfig', 'DO_DIS')
                     logging.info("DO_DIS = " + str(configuration.DO_DIS))
+                if "TIME_STEP_CIRCUITJS" in self.config["myConfig"]:
+                    configuration.TIME_STEP_CIRCUITJS = self.config.getfloat('myConfig', 'TIME_STEP_CIRCUITJS')
+                    logging.info("TIME_STEP_CIRCUITJS = " + str(configuration.TIME_STEP_CIRCUITJS))
                 if "FIFO_PATH" in self.config["myConfig"]:
                     configuration.FIFO_PATH = self.config['myConfig']['FIFO_PATH']
                     logging.info("FIFO_PATH = " + configuration.FIFO_PATH)

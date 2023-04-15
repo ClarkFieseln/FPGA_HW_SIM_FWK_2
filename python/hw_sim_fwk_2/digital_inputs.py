@@ -41,7 +41,7 @@ class DigitalInputs:
     idx = 0
     idx_max = 0
     update_di_sync = None
-    update_di_async = None
+    update_di_async = None    
 
     def __init__(self, event, clock_period_sec):
         logging.info('init DigitalInputs')
@@ -50,7 +50,7 @@ class DigitalInputs:
         self.FMT_SYNC = "{0:0" + str(configuration.NR_SYNC_DIS) + "b}"
         self.FMT_ASYNC = "{0:0" + str(configuration.NR_ASYNC_DIS) + "b}"
         self.DIS = str(configuration.DI_INDEX) + ":" + "0" * configuration.NR_ASYNC_DIS + \
-                   "0" * configuration.NR_SYNC_DIS + ","
+                   "0" * configuration.NR_SYNC_DIS + ","              
         if configuration.DO_DIS == configuration.DO_CIRCUITJS_DIS:
             self.update_di_sync = self.update_di_sync_circuitjs
             self.update_di_async = self.update_di_async_circuitjs
@@ -101,17 +101,25 @@ class DigitalInputs:
         elif configuration.DO_DIS == configuration.DO_CNT_DIS:
             self.update_di_sync = self.update_di_sync_cnt
             self.update_di_async = self.update_di_async_cnt
+        # WORKAROUND: in case sync or async DIs is zero
+        if configuration.NR_SYNC_DIS <= 0:
+            self.update_di_sync = self.update_di_sync_dummy
+        if configuration.NR_ASYNC_DIS <= 0:
+            self.update_di_async = self.update_di_async_dummy
+        # threads
         for i in range(configuration.NR_SYNC_DIS):
             SYNC_DI_IDX.append(i)
         if (configuration.DO_DI_CHANGES_IN_THREAD is True) and (configuration.DO_DIS != configuration.DO_CIRCUITJS_DIS):
-            di_sync_thread = threading.Thread(name="di_sync_thread", target=self.di_sync_thread)
-            di_sync_thread.start()
+            if configuration.NR_SYNC_DIS > 0:
+                di_sync_thread = threading.Thread(name="di_sync_thread", target=self.di_sync_thread)
+                di_sync_thread.start()
         for i in range(configuration.NR_ASYNC_DIS):
             # by convention all async DIs are stored at the end of the list
             ASYNC_DI_IDX.append(configuration.NR_ASYNC_DIS + i)
         if (configuration.DO_DI_CHANGES_IN_THREAD is True) and (configuration.DO_DIS != configuration.DO_CIRCUITJS_DIS):
-            di_async_thread = threading.Thread(name="di_async_thread", target=self.di_async_thread)
-            di_async_thread.start()
+            if configuration.NR_ASYNC_DIS > 0:
+                di_async_thread = threading.Thread(name="di_async_thread", target=self.di_async_thread)
+                di_async_thread.start()
 
     @staticmethod
     def start_websocket_server(event, update_di_sync, update_di_async):
@@ -126,8 +134,11 @@ class DigitalInputs:
         self.DIS = self.DIS[0: len(str(configuration.DI_INDEX)) + 1 + configuration.NR_ASYNC_DIS] + \
                    self.FMT_SYNC.format(self.__di_sync_count) + self.DIS[-1]
         # inform GUI
-        # self.__event.evt_gui_di_update.set()  # update instead in do_slot() when self.DIS != self.DIS_LAST
-
+        # self.__event.evt_gui_di_update.set()  # NOTE: update instead in do_slot() when self.DIS != self.DIS_LAST
+        
+    def update_di_sync_dummy(self):
+        return
+    
     def update_di_sync_rnd(self):
         # assign a random number to sync
         self.__di_sync_count = random.randint(0, 2 ** configuration.NR_SYNC_DIS)
@@ -154,8 +165,11 @@ class DigitalInputs:
         self.DIS = self.DIS[0: len(str(configuration.DI_INDEX)) + 1] + \
                    self.FMT_ASYNC.format(self.__di_async_count) + self.DIS[-(configuration.NR_SYNC_DIS + 1):]
         # inform GUI
-        # self.__event.evt_gui_di_update.set()  # update instead in do_slot() when self.DIS != self.DIS_LAST
-
+        # self.__event.evt_gui_di_update.set()  # NOTE: update instead in do_slot() when self.DIS != self.DIS_LAST
+        
+    def update_di_async_dummy(self):
+        return
+    
     def update_di_async_rnd(self):
         # assign a random number to async
         self.__di_async_count = random.randint(0, 2 ** configuration.NR_ASYNC_DIS)
@@ -229,11 +243,17 @@ class DigitalInputs:
         else:
             check_changes = True
         if check_changes is True:
-            # NOTE: as an example react only to clock raising edge (sync) and clock high (async)
-            if (slot_nr == SLOT_CLOCK_RAISING_EDGE) or (slot_nr == SLOT_CLOCK_HIGH_LEVEL):
-                if self.DIS != self.DIS_LAST:
-                    self.DIS_LAST = self.DIS
-                    ret_val = self.DIS
-                    # inform GUI
-                    self.__event.evt_gui_di_update.set()
+            # NOTE: check every time if there are changes...that is, we are fully async!
+            #       alternatively, we could react only to clock raising edge (sync) and clock high (async) with:
+            #       if (slot_nr == SLOT_CLOCK_RAISING_EDGE) or (slot_nr == SLOT_CLOCK_HIGH_LEVEL):
+            if self.DIS != self.DIS_LAST:
+                self.DIS_LAST = self.DIS
+                ret_val = self.DIS
+                # inform GUI
+                self.__event.evt_gui_di_update.set()
         return ret_val
+
+
+
+
+
