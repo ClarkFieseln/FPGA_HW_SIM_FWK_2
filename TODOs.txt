@@ -1,7 +1,6 @@
-- check if app is closing properly
+- correct BUG: sporadic loss or delay of data in "synchronized" websocket communication (sine wave shows jumps!)
+- improvement / BUG: 2 calls on socket.onmessage() for every call on didStep() in fpga_hw_sim_fwk.js?
 - check if pywin32 is correctly detected and installed when generating .exe
-- show data exchange rate in Hz between circuitjs and app (?)
-- need to add GNU General Public License v2.0 to folder circuitjs and mark exact code pieces which were adapted?
 - add plot
 - use cython to improve performance
 - add .bat to execute .exe in own console
