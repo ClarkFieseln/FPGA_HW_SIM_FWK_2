@@ -3,8 +3,6 @@
 
 2) copy the 3 fpga_hw_sim_fwk.* (.html, .js, .txt) files and favicon.ico in this folder to:
    circuitjs1/resources/app/war
-   
-   (WORKAROUND in case of browser-cache: use a different browser or rename sensor.txt to fpga_hw_sim_fwk.txt)
 
 3) set the following in configuration.py:
    DO_DIS = DO_CIRCUITJS_DIS
@@ -18,14 +16,14 @@
       python -m http.server
    c) open your browser and type:
       http://127.0.0.1:8000/fpga_hw_sim_fwk.html
-      (you may need to allow execution of javascripts and/or refresh your browser)
+      (you may need to allow execution of javascripts and/or refresh your browser,
+      *** use Ctrl + F5 to "force refresh" if required ***)
 
-6) now you see the voltage from the internal node "D0" both in the python app and in the VHDL simulator!
-   if you want to convince yourself try e.g. in circuitjs:
-   - opening the manual switch on the right
-   - or stop/re-start the simulation
-   you shall be able to see the behavior in the python app (digital inputs at the left-bottom side) and 
-   in your VHDL simulation tool (e.g. in the waveform)
+6) now you see the output voltage from the transformer "Ve" both in the python app and in the VHDL simulator.
+   You shall be able to see the behavior in the python app (digital inputs at the left-bottom side) and 
+   in your VHDL simulation tool (e.g. in the waveform). In addition, the digital outputs mirror the digital inputs.
+   The frequency of the input voltage of the transformer may be changed with button B0.
+   If you change e.g. the coupling coefficient by hand you will see that the decrease in Ve is detected by the VHDL code and as a result the LED L11 is turned on.
 
 NOTE:
 Part of the files in this folder are adpatations from the original source code provided here:
