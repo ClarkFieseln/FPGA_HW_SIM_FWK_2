@@ -1,7 +1,7 @@
 1) download the offline version of circuitj from here:
    https://www.falstad.com/circuit/offline/
 
-2) copy the 3 fpga_hw_sim_fwk.* (.html, .js, .txt) files and favicon.ico in this folder to:
+2) copy fpga_hw_sim_fwk.html, fpga_hw_sim_fwk.js, sensor.txt and favicon.ico in this folder to:
    circuitjs1/resources/app/war
 
 3) set the following in configuration.py:
