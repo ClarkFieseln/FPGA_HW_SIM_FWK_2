@@ -69,9 +69,9 @@ This tool provides the following features, usually not supported by standard sim
   
 The stimulus and results exchanged between the Simulation App written in Python and the
 VHDL Simulation Tool (any tool supporting VHDL 2008), are fast enough to produce a realistic and interactive HW behavior.
-(The rate of data exchanged between Simulation App and circuitjs is also extremely high).
+(The rate of data exchanged between Simulation App and circuitjs is also very high).
 
 The current project is an improvement of an earlier project which has been optimized for performance.
-Faster signals will no longer be processed in real-time but the simulation will still be very fast.
+Signals beyond some frequency, which depends on the specific configuration and used PC, will no longer be processed in real-time but the simulation will still be very fast.
 
 In order to support simulation of "asynchronous" signals, the current rate of the simulation clock is reduced to 1/4th. But the overall simulation rate continues to be the maximum in "turbo mode" because the signals are exchanged in 4 different clock phases within each clock period.
