@@ -21,9 +21,9 @@
 
 6) now you see the output voltage from the transformer "Ve" both in the python app and in the VHDL simulator.
    You shall be able to see the behavior in the python app (digital inputs at the left-bottom side) and 
-   in your VHDL simulation tool (e.g. in the waveform). In addition, the digital outputs mirror the digital inputs.
-   The frequency of the input voltage of the transformer may be changed with button B0.
-   If you change e.g. the coupling coefficient by hand you will see that the decrease in Ve is detected by the VHDL code and as a result the LED L11 is turned on.
+   in your VHDL simulation tool (e.g. in the waveform). In addition, the digital outputs, controlled in VHDL, mirror the digital inputs.
+   The frequency of the input voltage of the transformer may be changed with button B0 (again, the event is processed in VHDL and the corresponding frequency is set).
+   If you change e.g. the coupling coefficient by hand you will see that the decrease in Ve is detected by the VHDL code and the LED L11 is turned on as a result.
 
 NOTE:
 Part of the files in this folder are adpatations from the original source code provided here:
