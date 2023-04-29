@@ -21,7 +21,7 @@ FPGA Hardware Simulation Framework 2.2
 
 ![plot](./img/architecture_overview.png)
 
-## FPGA GUI
+## Framework GUI
 
 ![plot](./img/fpga_gui.png)
 
