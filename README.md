@@ -2,6 +2,10 @@
 
 FPGA Hardware Simulation Framework 2.2
 
+Simulate hardware containing an FPGA interactively!
+The concurrent simulation of stimulus and results is straight forward, "real" threads can be used to test realistic situations which are otherwise not possible with standard VHDL or Verilog simulation tools.
+The simulation framework replaces the FPGA chip itself, as well as peripheral components and external devices.
+
   - includes generation of .exe file!
   - includes "synchronized" connection to [circuitjs](https://www.falstad.com/circuit/) over websockets!
   
@@ -77,3 +81,4 @@ The current project is an improvement of an earlier project which has been optim
 Signals beyond some frequency, which depends on the specific configuration and the used computer, will no longer be processed in real-time but the simulation will still be very fast.
 
 In order to support simulation of "asynchronous" signals, the current rate of the simulation clock is reduced to 1/4th. But the overall simulation rate continues to be the maximum in "turbo mode" because the signals are exchanged in 4 different clock phases within each clock period.
+
